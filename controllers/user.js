@@ -2,7 +2,7 @@ const userModel = require("../models/user");
 
 exports.createUser = async (req, res) => {
     const { username, password } = req.body;
-    const hashedPassword = bcrypt.hashSync(password, 10, () => {
+    bcrypt.hash(password, 10, async (error, hashedPassword) => {
         try {
             const user = await userModel.createUser(username, hashedPassword);
             res.json("Created user succesfully").status(200);
