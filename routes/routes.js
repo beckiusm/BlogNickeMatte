@@ -9,20 +9,20 @@ router.post("/post", postController.insertPost);
 // DELETE EXISTING POST
 router.delete("/post/:id", postController.deletePost);
 
+// UPDATE EXISTING POST WITH TITLE AND CONTENT
+router.put("/post/:id", postController.updatePost);
+
 // GET ALL EXISTING POSTS
 router.get("/posts", postController.getPosts);
 
 // GET SINGLE POST
-router.get("post/:id", postController.getPost);
+router.get("/post/:id", postController.getPost);
 
 // GET ALL EXISTING POSTS
 router.get("/comments", commentController.getComments);
 
 // GET SINGLE POST
-router.get("comment/:id", commentController.getComment);
-
-// UPDATE EXISTING POST WITH TITLE AND CONTENT
-router.put("/post/:id", postController.updatePost);
+router.get("/comment/:id", commentController.getComment);
 
 // CREATE A NEW COMMENT TO A SPECIFIC POST
 router.post("/post/:id/comment", commentController.insertComment);

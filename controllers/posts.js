@@ -9,9 +9,10 @@ exports.getPosts = async (req, res) => {
   }
 };
 
-exports.getPosts = async (req, res) => {
+exports.getPost = async (req, res) => {
+  const id = req.params.id;
   try {
-    const posts = await postModel.getPost(id);
+    const post = await postModel.getPost(id);
     res.json(post);
   } catch (error) {
     res.json({ error: error.message });

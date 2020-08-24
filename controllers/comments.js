@@ -10,6 +10,7 @@ exports.getComments = async (req, res) => {
 };
 
 exports.getComment = async (req, res) => {
+  const id = req.params.id;
   try {
     const comment = await commentModel.getComment(id);
     res.json(comment);
