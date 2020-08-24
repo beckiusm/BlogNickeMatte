@@ -21,8 +21,10 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // router
-const router = require("./routes/routes");
-app.use("/", router);
+const postsRoute = require("./routes/posts");
+const commentsRoute = require("./routes/comments");
+app.use("/posts", postsRoute);
+app.use("/comments", commentsRoute)
 
 app.listen(3000, () => {
   console.log("Listen on port 3000");
