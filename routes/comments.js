@@ -4,18 +4,18 @@ const commentController = require("../controllers/comments.js");
 
 
 // GET ALL EXISTING POSTS
-router.get("/comments", commentController.getComments);
+router.get("/", commentController.getComments);
 
 // GET SINGLE POST
-router.get("comment/:id", commentController.getComment);
+router.get("/:id", commentController.getComment);
 
 // CREATE A NEW COMMENT TO A SPECIFIC POST
-router.post("/post/:id/comment", commentController.insertComment);
+router.post("/:id/comment", commentController.insertComment);
 
 // UPDATE A EXISTING COMMENT TO A SPECIFIC POST
-router.put("/comment/:id", commentController.updateComment);
+router.patch("/:id", commentController.updateComment);
 
 // DELETE A EXISTING COMMENT TO A SPECIFIC POST
-router.delete("/comment/:id", commentController.deleteComment);
+router.delete("/:id", commentController.deleteComment);
 
 module.exports = router;
