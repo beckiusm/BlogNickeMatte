@@ -9,14 +9,16 @@ module.exports = {
             }
           });
         },
-    loginUser: function (username, password) {
+    loginUser: function (username) {
         return new Promise(async (resolve, reject) => {
             try {
-                const doc = await db.users.find({username: username, password: password});
+                const doc = await db.users.find({username: username});
                 resolve(doc);
             } catch (error) {
                 reject(error);
             }
         })
     }
+    
+
 };

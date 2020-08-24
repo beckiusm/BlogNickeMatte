@@ -12,3 +12,21 @@ exports.createUser = async (req, res) => {
         }
     })
 };
+
+exports.loginUser = async (req, res) => {
+    const { username, password } = req.body;
+    try {
+        const user = await userModel.loginUser(username);
+        bcrypt.compare(password, user[0].password, (err, result) => {
+            if(!result) {
+                res.json("wrong password")
+            } else {
+                res.json("login success").status(200); 
+            }
+            
+        })
+    } catch (error) {
+        res.json({ error: error.message });
+    }
+    
+}
