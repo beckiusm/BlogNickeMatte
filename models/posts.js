@@ -21,10 +21,10 @@ module.exports = {
     });
   },
 
-  insertPost: function (title, content) {
+  insertPost: function (userID, title, content) {
     return new Promise(async (resolve, reject) => {
       try {
-        const post = await db.posts.insert({ title, content });
+        const post = await db.posts.insert({ userID, title, content });
         resolve(post);
       } catch (error) {
         reject(error);

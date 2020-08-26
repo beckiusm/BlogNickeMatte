@@ -20,9 +20,10 @@ exports.getPost = async (req, res) => {
 };
 
 exports.insertPost = async (req, res) => {
+  const userID = req.user._id;
   const { title, content } = req.body;
   try {
-    const post = await postModel.insertPost(title, content);
+    const post = await postModel.insertPost(userID, title, content);
     res.json(post);
   } catch (error) {
     res.json({ error: error.message });

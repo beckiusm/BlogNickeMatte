@@ -21,11 +21,11 @@ module.exports = {
     });
   },
 
-  insertComment: function (user, message, timestamp, postID) {
+  insertComment: function (userID, message, timestamp, postID) {
     return new Promise(async (resolve, reject) => {
       try {
         const doc = await db.comments.insert({
-          user,
+          userID,
           message,
           timestamp,
           postID,
@@ -37,14 +37,13 @@ module.exports = {
     });
   },
 
-  updateComment: function (id, user, message, timestamp) {
+  updateComment: function (id, message, timestamp) {
     return new Promise(async (resolve, reject) => {
       try {
         const doc = await db.comments.update(
           { _id: id },
           {
             $set: {
-              user: user,
               message: message,
               timestamp: timestamp,
             },
