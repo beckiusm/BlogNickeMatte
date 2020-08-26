@@ -2,8 +2,15 @@ const postModel = require("../models/posts");
 
 exports.getPosts = async (req, res) => {
   try {
-    const posts = await postModel.getPosts();
-    res.json(posts);
+    if (req.user.role === "admin") {
+      const posts = await postModel.getPosts();
+      res.json(posts);
+    } else if (req.user.role === "user") {
+      const posts = await postModel.getPostsById(req.user._id);
+      res.json(posts);
+    } else {
+      res.json({message: "please login to see posts"});
+    }
   } catch (error) {
     res.json({ error: error.message });
   }

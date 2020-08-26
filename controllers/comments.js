@@ -1,9 +1,20 @@
 const commentModel = require("../models/comments");
+const ac = require('../app').ac;
 
 exports.getComments = async (req, res) => {
+  const permission = ac.can(req.user.role).readAny('comment');
+  const permission2 = ac.can(req.user.role).readOwn('comment');
+  console.log(permission.granted);
   try {
-    const comments = await commentModel.getComments();
-    res.json(comments);
+    if (permission.granted) {
+      const comments = await commentModel.getComments();
+      res.json(comments);
+    } else if (permission2.granted) {
+      const comments = await commentModel.getCommentsById(req.user._id);
+      res.json(comments);
+    } else {
+      res.json({message: "please login to see comments"});
+    }
   } catch (error) {
     res.json({ error: error.message });
   }
@@ -39,13 +50,11 @@ exports.insertComment = async (req, res) => {
 exports.updateComment = async (req, res) => {
   const commentId = req.params.id;
   const { message, timestamp } = req.body;
-  const userID = req.user.id
   try {
     const comment = await commentModel.updateComment(
       commentId,
       message,
-      timestamp,
-      userID
+      timestamp
     );
     res.json({ message: "Number of updated comments: " + comment }).status(200);
   } catch (error) {

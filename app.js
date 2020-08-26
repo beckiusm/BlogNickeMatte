@@ -1,6 +1,21 @@
 const express = require("express");
 const app = express();
 const { v4: uuidv4 } = require("uuid");
+const AccessControl = require('accesscontrol');
+
+// access control
+const ac = new AccessControl();
+ac.grant('user')
+    .createOwn(['post', 'comment'])
+    .deleteOwn(['post', 'comment'])
+    .updateOwn(['post', 'comment'])
+    .readOwn(['post', 'comment'])
+  .grant('admin')
+    .extend('user')
+    .updateAny(['post', 'comment'])
+    .deleteAny(['post', 'comment'])
+;
+exports.ac = ac;
 
 bodyParser = require("body-parser");
 

@@ -10,6 +10,17 @@ module.exports = {
     });
   },
 
+  getPostsById: function (userID) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const doc = await db.posts.find({userID});
+        resolve(doc);
+      } catch (error) {
+        reject(error);
+      }
+    });
+  },
+
   getPost: function (id) {
     return new Promise(async (resolve, reject) => {
       try {

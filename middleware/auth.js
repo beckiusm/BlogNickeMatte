@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken');
 const secret = "secret"
 const commentModel = require("../models/comments");
 const postModel = require("../models/posts");
+const ac = require('../app').ac;
 
 function auth(req, res, next) {
     if(!req.headers.authorization) {
@@ -20,8 +21,8 @@ function auth(req, res, next) {
 
 async function isCommentOwner(req, res, next) {
   const comment = await commentModel.getComment(req.params.id)
-
-  if (comment[0].userID == req.user._id) {
+  const permission = ac.can(req.user.role).updateAny('comment');
+  if (permission.granted || comment[0].userID == req.user._id) {
     next();
   } else {
     res.sendStatus(401);
@@ -31,8 +32,8 @@ async function isCommentOwner(req, res, next) {
 
 async function isPostOwner(req, res, next) {
   const post = await postModel.getPost(req.params.id)
-
-  if (post[0].userID == req.user._id) {
+  const permission = ac.can(req.user.role).updateAny('comment');
+  if (permission.granted || post[0].userID == req.user._id) {
     next();
   } else {
     res.sendStatus(401);
