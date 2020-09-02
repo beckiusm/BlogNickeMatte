@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const secret = "secret"
+const secret = process.env.SECRET;
 const commentModel = require("../models/comments");
 const postModel = require("../models/posts");
 

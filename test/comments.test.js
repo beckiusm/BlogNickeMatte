@@ -2,30 +2,56 @@ const express = require('express')();
 const chai = require('chai');
 chai.should();
 const commentModel = require("../models/comments");
-const db2 = require("./database/test").db2;
+const userModel = require("../models/user");
+const postModel = require("../models/posts");
+const db = require('../database/db').db;
+
+function randString() {
+    return Math.random().toString(20).substr(2, 6);
+}
+function randNumber() {
+    return Math.random().toString(5).substr(2, 5);
+}
 
 describe('Comment model', () => {
+    beforeEach(() => {
+      db.comments.remove({}, {multi: true});
+      db.users.remove({}, {multi: true});
+    })
     it('count all documents in db', async () => {
-        const doc = await commentModel.getComments(db2);
-
-        const res = await commentModel.count(db2);
-
-        res.should.equal(doc.length);
+        // arrange
+        const user = await userModel.createUser(randString(), randString());
+        const post = await postModel.insertPost(user._id, randString(), randString);
+        for (let i = randNumber(); i < 10; i++) {
+            await commentModel.insertComment(user._id, randString(), Date.now(), post._id);
+        }
+        let comments = await commentModel.getComments();
+        let count = await commentModel.count();
+        comments.length.should.equal(count);
     })
 
     it('owner id should equal comment user id', async () => {
-        const doc = await commentModel.getComment("sJX2i37YkpOdEi68", db2);
-        //console.log(doc);
-        const res = await commentModel.owner(doc.userID, db2);
-        //console.log(res);
-        res._id.should.equal(doc.userID);
+        // arrange
+        const user = await userModel.createUser(randString(), randString());
+        const post = await postModel.insertPost(user._id, randString(), randString);
+        const comment = await commentModel.insertComment(user._id, randString(), Date.now(), post._id);
+        const doc = await commentModel.getComment(comment._id, db);
+        const owner = await commentModel.owner(doc.userID, db);
+
+        owner._id.should.equal(doc.userID);
     })
 
     it('should match search query', async () => {
-        const res = await commentModel.search(/test/i, db2);
+        const query = /test/i;
+        const user = await userModel.createUser(randString(), randString());
+        const post = await postModel.insertPost(user._id, randString(), randString);
+        for (let i = randNumber(); i < 10; i++) {
+            await commentModel.insertComment(user._id, randString(), Date.now(), post._id);
+        }
+        const res = await commentModel.search(query);
         res.should.be.a('array');
         for (let comment of res) {
-            comment.message.should.match(/test/i);
+            comment.message.should.match(query);
         }
     })
 })

@@ -1,33 +1,58 @@
 const express = require('express')();
 const chai = require('chai');
 chai.should();
+const userModel = require("../models/user");
 const postModel = require("../models/posts");
-const db2 = require("./database/test").db2;
+const db = require('../database/db').db;
 
+function randString() {
+    return Math.random().toString(20).substr(2, 6);
+}
+function randNumber() {
+    return Math.floor(Math.random() * 6) + 1;
+}
 
-describe('Postmodel', () => {
+describe('Post model', () => {
+    beforeEach(() => {
+      db.posts.remove({}, {multi: true});
+      db.users.remove({}, {multi: true});
+    })
     it('count all documents in db', async () => {
-        const doc = await postModel.getPosts(db2);
-
-        const res = await postModel.count(db2);
-
-        res.should.equal(doc.length);
+        // arrange
+        const user = await userModel.createUser(randString(), randString());
+        for (let i = randNumber(); i < 10; i++) {
+            await postModel.insertPost(user._id, randString(), randString);
+        }
+        // act
+        let comments = await postModel.getPosts();
+        let count = await postModel.count();
+        // assert
+        comments.length.should.equal(count);
     })
 
     it('owner id should equal post user id', async () => {
-        const doc = await postModel.getPost("y9VGLIf2ALH8jHkv", db2);
-        //console.log(doc);
-        const res = await postModel.owner(doc.userID, db2);
-        //console.log(res);
-        res._id.should.equal(doc.userID);
+        // arrange
+        const user = await userModel.createUser(randString(), randString());
+        const post = await postModel.insertPost(user._id, randString(), randString);
+        // act
+        const doc = await postModel.getPost(post._id);
+        const owner = await postModel.owner(doc.userID);
+        // assert
+        owner._id.should.equal(doc.userID);
     })
 
-    it('nånting search', async () => {
+    it('should match search query', async () => {
+        // arrange
         const query = /test/i;
-        const res = await postModel.search({$or: [{title: query}, {content: query}]}, db2);
-        res.should.be.a('array');
-        for (let post of res) {
-            
+        const user = await userModel.createUser(randString(), randString());
+        for (let i = randNumber(); i < 10; i++) {
+            await postModel.insertPost(user._id, 'test', 'test');
+        }
+        // act
+        const posts = await postModel.search(query);
+        // assert
+        posts.should.be.a('array');
+        for (let post of posts) {
             post.should.satisfy( () => {
                 return query.test(post.title) || query.test(post.content);
             });

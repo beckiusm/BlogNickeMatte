@@ -1,8 +1,8 @@
-const db = require('../app').db;
+const db = require('../database/db').db;
 
 module.exports = {
 
-  getComments (db = db) {
+  getComments () {
     return new Promise(async (resolve, reject) => {
       try {
         const doc = await db.comments.find({});
@@ -13,7 +13,7 @@ module.exports = {
     });
   },
 
-  getComment (id, db = db) {
+  getComment (id) {
     return new Promise(async (resolve, reject) => {
       try {
         const doc = await db.comments.findOne({_id: id});
@@ -24,7 +24,7 @@ module.exports = {
     });
   },
 
-  insertComment (userID, message, timestamp, postID, db = db) {
+  insertComment (userID, message, timestamp, postID) {
     return new Promise(async (resolve, reject) => {
       try {
         const doc = await db.comments.insert({
@@ -71,7 +71,7 @@ module.exports = {
     });
   },
 
-  count (db = db) {
+  count () {
     return new Promise(async (resolve, reject) => {
       try {
         const count = await db.comments.find({})
@@ -82,7 +82,7 @@ module.exports = {
     })
   },
 
-  owner (id, db = db) {
+  owner (id) {
     return new Promise(async (resolve, reject) => {
       try {
         const user = await db.users.findOne({_id: id})
@@ -93,7 +93,7 @@ module.exports = {
     })
   },
 
-  search (query, db = db) {
+  search (query) {
     return new Promise(async (resolve, reject) => {
       try {
         const comments = await db.comments.find({message: query})

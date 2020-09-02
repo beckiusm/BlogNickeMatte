@@ -1,7 +1,7 @@
-const db = require('../app').db;
+const db = require('../database/db').db;
 
 module.exports = {
-  getPosts: function (db = db) {
+  getPosts: function () {
     return new Promise(async (resolve, reject) => {
       try {
         const doc = await db.posts.find({});
@@ -12,7 +12,7 @@ module.exports = {
     });
   },
 
-  getPost: function (id, db = db) {
+  getPost: function (id) {
     return new Promise(async (resolve, reject) => {
       try {
         const doc = await db.posts.findOne({_id: id});
@@ -23,7 +23,7 @@ module.exports = {
     });
   },
 
-  insertPost: function (userID, title, content, db = db) {
+  insertPost: function (userID, title, content) {
     return new Promise(async (resolve, reject) => {
       try {
         const post = await db.posts.insert({ userID, title, content });
@@ -56,7 +56,7 @@ module.exports = {
     });
   },
 
-  count (db = db) {
+  count () {
     return new Promise(async (resolve, reject) => {
       try {
         const count = await db.posts.find({});
@@ -67,7 +67,7 @@ module.exports = {
     })
   },
 
-  owner (id, db = db) {
+  owner (id) {
     return new Promise(async (resolve, reject) => {
       try {
         const user = await db.users.findOne({_id: id});
@@ -78,10 +78,10 @@ module.exports = {
     })
   },
 
-  search (query, db = db) {
+  search (query) {
     return new Promise(async (resolve, reject) => {
       try {
-        const posts = await db.posts.find(query);
+        const posts = await db.posts.find({$or: [{title: query}, {content: query}]});
         //console.log(comments);
         resolve(posts);
       } catch (error) {
