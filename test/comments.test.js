@@ -10,7 +10,7 @@ function randString() {
     return Math.random().toString(20).substr(2, 6);
 }
 function randNumber() {
-    return Math.random().toString(5).substr(2, 5);
+    return Math.floor(Math.random() * 6) + 1;
 }
 
 describe('Comment model', () => {
@@ -18,7 +18,7 @@ describe('Comment model', () => {
       db.comments.remove({}, {multi: true});
       db.users.remove({}, {multi: true});
     })
-    it('count all documents in db', async () => {
+    it('count all comments in db', async () => {
         // arrange
         const user = await userModel.createUser(randString(), randString());
         const post = await postModel.insertPost(user._id, randString(), randString);

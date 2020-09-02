@@ -17,7 +17,7 @@ describe('Post model', () => {
       db.posts.remove({}, {multi: true});
       db.users.remove({}, {multi: true});
     })
-    it('count all documents in db', async () => {
+    it('count all posts in db', async () => {
         // arrange
         const user = await userModel.createUser(randString(), randString());
         for (let i = randNumber(); i < 10; i++) {
