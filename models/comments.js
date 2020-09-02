@@ -1,5 +1,8 @@
+const db = require('../app').db;
+
 module.exports = {
-  getComments: function () {
+
+  getComments (db = db) {
     return new Promise(async (resolve, reject) => {
       try {
         const doc = await db.comments.find({});
@@ -10,10 +13,10 @@ module.exports = {
     });
   },
 
-  getComment: function (id) {
+  getComment (id, db = db) {
     return new Promise(async (resolve, reject) => {
       try {
-        const doc = await db.comments.find({_id: id});
+        const doc = await db.comments.findOne({_id: id});
         resolve(doc);
       } catch (error) {
         reject(error)
@@ -21,7 +24,7 @@ module.exports = {
     });
   },
 
-  insertComment: function (userID, message, timestamp, postID) {
+  insertComment (userID, message, timestamp, postID, db = db) {
     return new Promise(async (resolve, reject) => {
       try {
         const doc = await db.comments.insert({
@@ -37,7 +40,7 @@ module.exports = {
     });
   },
 
-  updateComment: function (id, message, timestamp) {
+  updateComment (id, message, timestamp) {
     return new Promise(async (resolve, reject) => {
       try {
         const doc = await db.comments.update(
@@ -57,7 +60,7 @@ module.exports = {
     });
   },
 
-  deleteComment: function (id) {
+  deleteComment (id) {
     return new Promise(async (resolve, reject) => {
       try {
         const post = await db.comments.remove({ _id: id });
@@ -66,5 +69,39 @@ module.exports = {
         reject(error);
       }
     });
+  },
+
+  count (db = db) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const count = await db.comments.find({})
+        resolve(count.length);
+      } catch (error) {
+        reject(error);
+      }
+    })
+  },
+
+  owner (id, db = db) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const user = await db.users.findOne({_id: id})
+        resolve(user);
+      } catch (error) {
+        reject(error);
+      }
+    })
+  },
+
+  search (query, db = db) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const comments = await db.comments.find({message: query})
+        //console.log(comments);
+        resolve(comments);
+      } catch (error) {
+        reject(error);
+      }
+    })
   },
 };

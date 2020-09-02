@@ -1,3 +1,5 @@
+const db = require('../app').db;
+
 module.exports = {
     createUser: function (username, password) {
         return new Promise(async (resolve, reject) => {

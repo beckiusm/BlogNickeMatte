@@ -10,6 +10,7 @@ db = {};
 db.posts = new Datastore({ filename: __dirname + "/database/posts.db" });
 db.comments = new Datastore({ filename: __dirname + "/database/comments.db" });
 db.users = new Datastore({ filename: __dirname + "/database/users.db" });
+db.testComments = new Datastore({ filename: __dirname + "/database/testComments.db" });
 
 exports.db = db;
 
@@ -17,6 +18,7 @@ exports.db = db;
 db.posts.loadDatabase();
 db.comments.loadDatabase();
 db.users.loadDatabase();
+db.testComments.loadDatabase();
 
 // support parsing of application/json type post data
 app.use(bodyParser.json());

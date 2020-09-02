@@ -4,7 +4,7 @@ const postController = require("../controllers/posts.js");
 const auth = require("../middleware/auth.js")
 
 // CREATE A NEW POST
-router.post("/", auth.auth, postController.insertPost);
+router.post("/", postController.insertPost);
 
 // DELETE EXISTING POST
 router.delete("/:id", auth.auth, auth.isPostOwner, postController.deletePost);
